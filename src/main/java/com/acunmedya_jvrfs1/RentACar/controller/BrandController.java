@@ -3,6 +3,13 @@ package com.acunmedya_jvrfs1.RentACar.controller;
 import com.acunmedya_jvrfs1.RentACar.entity.Brand;
 import com.acunmedya_jvrfs1.RentACar.repository.BrandRepository;
 import com.acunmedya_jvrfs1.RentACar.service.abstracts.BrandService;
+import com.acunmedya_jvrfs1.RentACar.service.dtos.requests.brand.CreateBrandRequest;
+import com.acunmedya_jvrfs1.RentACar.service.dtos.requests.brand.UpdateBrandRequest;
+import com.acunmedya_jvrfs1.RentACar.service.dtos.responses.brand.CreatedBrandResponse;
+import com.acunmedya_jvrfs1.RentACar.service.dtos.responses.brand.GetBrandResponse;
+import com.acunmedya_jvrfs1.RentACar.service.dtos.responses.brand.GetListBrandResponse;
+import com.acunmedya_jvrfs1.RentACar.service.dtos.responses.brand.UpdateBrandResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,13 +35,34 @@ public class BrandController {
 
     //Get
     @GetMapping
-    public List<Brand> getBrands(){
+    @ResponseStatus(HttpStatus.OK) //200
+    public List<GetListBrandResponse> getBrands(){
         return brandService.getAll();
     }
 
+    @GetMapping("/{name}")
+    @ResponseStatus(HttpStatus.OK) //200
+    public GetBrandResponse getByName(@PathVariable String name){
+        return brandService.getByName(name);
+    }
+
     @PostMapping
-    public void add(@RequestBody Brand brand){
-        brandService.add(brand);
+    @ResponseStatus(HttpStatus.CREATED) //201
+    public CreatedBrandResponse add(@RequestBody CreateBrandRequest request){
+       return brandService.add(request);
+    }
+
+
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK) //200
+    public UpdateBrandResponse add(@RequestBody UpdateBrandRequest request){
+        return brandService.update(request);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK) //200
+    public void delete(@PathVariable int id){
+        brandService.delete(id);
     }
 
     /*@GetMapping("/getbyid/{id}")
