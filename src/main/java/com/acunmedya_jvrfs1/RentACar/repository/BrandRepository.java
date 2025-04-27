@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface BrandRepository extends JpaRepository<Brand,Integer> {
      Optional<Brand> getByName(String name);
 
+
+
 }
