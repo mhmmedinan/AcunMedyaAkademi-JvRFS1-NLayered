@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface BrandRepository extends JpaRepository<Brand,Integer> {
-     Optional<Brand> getByName(String name);
+     Brand getByNameIgnoreCase(String name);
 
 
 

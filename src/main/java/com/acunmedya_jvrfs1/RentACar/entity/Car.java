@@ -1,10 +1,11 @@
 package com.acunmedya_jvrfs1.RentACar.entity;
 
+import com.acunmedya_jvrfs1.RentACar.common.entity.BaseEntity;
 import jakarta.persistence.*;
 
 @Entity  //veritabanı tablosu olduğunu işaret eder
 @Table(name = "cars") //Tablo ismini temsil eder
-public class Car {
+public class Car extends BaseEntity {
 
     @Id //primary key alanı
     @GeneratedValue(strategy = GenerationType.IDENTITY) //Otomatik artan Id

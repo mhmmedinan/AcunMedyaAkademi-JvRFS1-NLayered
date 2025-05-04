@@ -1,12 +1,13 @@
 package com.acunmedya_jvrfs1.RentACar.entity;
 
+import com.acunmedya_jvrfs1.RentACar.common.entity.BaseEntity;
 import jakarta.persistence.*;
 
 import java.util.List;
 
 @Entity  //veritabanı tablosu olduğunu işaret eder
 @Table(name = "models") //Tablo ismini temsil eder
-public class Model {
+public class Model extends BaseEntity {
 
     @Id //primary key alanı
     @GeneratedValue(strategy = GenerationType.IDENTITY) //Otomatik artan Id
@@ -21,7 +22,7 @@ public class Model {
     @JoinColumn(name = "brandId")
     private Brand brand;
 
-    @OneToMany(mappedBy = "model")
+    @OneToMany(mappedBy = "model",cascade = CascadeType.ALL)
     private List<Car> cars;
 
     public Model(){

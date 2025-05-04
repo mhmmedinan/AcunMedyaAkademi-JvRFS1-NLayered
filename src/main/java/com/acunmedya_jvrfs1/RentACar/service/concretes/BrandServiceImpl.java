@@ -1,16 +1,16 @@
 package com.acunmedya_jvrfs1.RentACar.service.concretes;
 
+import com.acunmedya_jvrfs1.RentACar.common.exceptions.types.BusinessException;
 import com.acunmedya_jvrfs1.RentACar.entity.Brand;
 import com.acunmedya_jvrfs1.RentACar.repository.BrandRepository;
 import com.acunmedya_jvrfs1.RentACar.service.abstracts.BrandService;
 import com.acunmedya_jvrfs1.RentACar.service.dtos.requests.brand.CreateBrandRequest;
 import com.acunmedya_jvrfs1.RentACar.service.dtos.requests.brand.UpdateBrandRequest;
-import com.acunmedya_jvrfs1.RentACar.service.dtos.responses.brand.CreatedBrandResponse;
-import com.acunmedya_jvrfs1.RentACar.service.dtos.responses.brand.GetBrandResponse;
-import com.acunmedya_jvrfs1.RentACar.service.dtos.responses.brand.GetListBrandResponse;
-import com.acunmedya_jvrfs1.RentACar.service.dtos.responses.brand.UpdateBrandResponse;
+import com.acunmedya_jvrfs1.RentACar.service.dtos.responses.brand.*;
+import com.acunmedya_jvrfs1.RentACar.service.mappers.BrandMapper;
+import com.acunmedya_jvrfs1.RentACar.service.rules.BrandBusinessRules;
 import org.springframework.stereotype.Service;
-
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,13 +18,18 @@ import java.util.stream.Collectors;
 public class BrandServiceImpl implements BrandService {
 
     private final BrandRepository brandRepository;
+    private final BrandBusinessRules rules;
 
-    public BrandServiceImpl(BrandRepository brandRepository) {
+    public BrandServiceImpl(BrandRepository brandRepository, BrandBusinessRules rules) {
         this.brandRepository = brandRepository;
+        this.rules = rules;
     }
 
     @Override
     public CreatedBrandResponse add(CreateBrandRequest request) {
+
+        rules.checkIfNameExists(request.getName());
+
 
         //Manual Mapping
        Brand brand = new Brand();
@@ -61,8 +66,17 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public GetBrandResponse getByName(String name) {
-        Brand brand = brandRepository.getByName(name).orElseThrow(()->new RuntimeException("Brand name not found"));
+        Brand brand = brandRepository.getByNameIgnoreCase(name);
         return mapToBrandResponse(brand);
+    }
+
+    @Override
+    public DeletedBrandResponse softDelete(int id) {
+        Brand brand = brandRepository.findById(id).orElseThrow(()->new RuntimeException("Brand not found"));
+        brand.setDeletedAt(LocalDateTime.now());
+        Brand deletedBrand = brandRepository.save(brand);
+        DeletedBrandResponse response = BrandMapper.INSTANCE.deletedBrandResponseFromBrand(deletedBrand);
+        return response;
     }
 
     private GetListBrandResponse mapToResponse(Brand brand){
@@ -74,5 +88,7 @@ public class BrandServiceImpl implements BrandService {
         GetBrandResponse response = new GetBrandResponse(brand.getId(),brand.getName());
         return response;
     }
+
+
 }
 

@@ -5,10 +5,7 @@ import com.acunmedya_jvrfs1.RentACar.repository.BrandRepository;
 import com.acunmedya_jvrfs1.RentACar.service.abstracts.BrandService;
 import com.acunmedya_jvrfs1.RentACar.service.dtos.requests.brand.CreateBrandRequest;
 import com.acunmedya_jvrfs1.RentACar.service.dtos.requests.brand.UpdateBrandRequest;
-import com.acunmedya_jvrfs1.RentACar.service.dtos.responses.brand.CreatedBrandResponse;
-import com.acunmedya_jvrfs1.RentACar.service.dtos.responses.brand.GetBrandResponse;
-import com.acunmedya_jvrfs1.RentACar.service.dtos.responses.brand.GetListBrandResponse;
-import com.acunmedya_jvrfs1.RentACar.service.dtos.responses.brand.UpdateBrandResponse;
+import com.acunmedya_jvrfs1.RentACar.service.dtos.responses.brand.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -55,7 +52,7 @@ public class BrandController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK) //200
-    public UpdateBrandResponse add(@RequestBody UpdateBrandRequest request){
+    public UpdateBrandResponse update(@RequestBody UpdateBrandRequest request){
         return brandService.update(request);
     }
 
@@ -63,6 +60,13 @@ public class BrandController {
     @ResponseStatus(HttpStatus.OK) //200
     public void delete(@PathVariable int id){
         brandService.delete(id);
+    }
+
+
+    @DeleteMapping("softdelete/{id}")
+    @ResponseStatus(HttpStatus.OK) //200
+    public DeletedBrandResponse softdelete(@PathVariable int id){
+        return brandService.softDelete(id);
     }
 
     /*@GetMapping("/getbyid/{id}")
